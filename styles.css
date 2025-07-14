@@ -1,0 +1,38 @@
+body {
+  background-color: #f4f4f9;  
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333; 
+  margin: 0;
+  padding: 20px;
+}
+
+/* Títulos */
+h1, h2, h3 {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+}
+
+/* Botón */
+button {
+  background-color: #007bff; 
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Input */
+input {
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Mensajes */
+#mensaje {
+  margin-top: 10px;
+  color: #cc0000; 
+}

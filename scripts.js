@@ -1,107 +1,81 @@
-//Programa para Armar pc (PRESUPUESTO).
-//Se elije que procesador, motherboard y memoria ram. A partir de las correcciones de la primera entrega, hice un solo 
-//modulo donde segun el parametro ingresado, se elige el componente.
-//Se verifica que el usuario no ingrese valores invalidos.
-//Uso dos arrays para las marcas, ya que se puede elegir entre 2 posibles.
-function elegir(componente,micro = null){
-    
-    if (componente == "cpu"){
-        let preciosIntel = [{nombre: "intel i3", precio: 115000},{nombre: "intel i5", precio: 150000},{nombre: "intel i7", precio: 250000}];
-        let preciosAmd = [{nombre: "ryzen 3", precio: 75000},{nombre: "ryzen 5", precio: 110000},{nombre: "ryzen 7", precio: 200000}];
-
-        let marca = prompt("Ingrese la marca del microprocesador, amd o intel").toLowerCase();
-        if(marca == "intel"){
-            let n = parseInt(prompt("Elija una opcion \n 1- i3 14100F \n 2- i5 12400F \n 3- i7 12700F"));
-            while (n < 1 || n > 3){        
-                n = parseInt(prompt("Numero invalido, \n 1- i3 14100F \n 2- i5 12400F \n 3- i7 12700F"));    
-        }
-        let micro = preciosIntel[n-1];
-        return micro; 
-        }
-        else if(marca == "amd"){
-            let n = parseInt(prompt("Elija una opcion \n 1- ryzen 3 5400G \n 2- ryzen 5 5600G \n 3- ryzen 7 5700G"));
-            while (n < 1 || n > 3){        
-                n = parseInt(prompt("Numero invalido, Elija una opcion \n 1- ryzen 3 5400G \n 2- ryzen 5 5600G \n 3- ryzen 7 5700G"));
-            }
-            let micro = preciosAmd[n-1];
-            return micro; 
-        }
-        else {
-            console.log("Ingreso una marca invalida");
-        }
+//Simulador de tienda de hardware
+//HardCodeo los productos de mi tienda
+const productos = [
+  { id: 1, nombre: "intel i3", precio: 115000 },
+  { id: 2, nombre: "intel i5", precio: 150000 },
+  { id: 3, nombre: "intel i7", precio: 250000 },
+  { id: 4, nombre: "ryzen 3", precio: 75000 },
+  { id: 5, nombre: "ryzen 5", precio: 110000 },
+  { id: 6, nombre: "ryzen 7", precio: 200000 },
+  { id: 7, nombre: "Ashrock B450", precio: 85000 },
+  { id: 8, nombre: "Asus 520M", precio: 120000 },
+  { id: 9, nombre: "Gigabyte H610", precio: 146000 },
+  { id: 10, nombre: "Msi B760", precio: 230000 },
+  { id: 11, nombre: "Memoria 8 GB", precio: 25000 },
+  { id: 12, nombre: "Memoria 16 GB", precio: 50000 }
+];
+//Traigo los elementos del dom
+const contenedor = document.getElementById("productos");
+const carritoLista = document.getElementById("carrito");
+const btnComprar = document.getElementById("comprar");
+//Creo un objeto carrito, con metodos para agregar un producto, limpiar, cargar el carrito en el localStorage
+const Carrito = {
+  lista: [],
+  agregar(producto) {
+    this.lista.push(producto);
+    localStorage.setItem("carrito", JSON.stringify(this.lista));
+    mostrarCarrito();
+  },
+  limpiar() {
+    this.lista = [];
+    localStorage.removeItem("carrito");
+    mostrarCarrito();
+  },
+  cargar() {
+    const guardado = JSON.parse(localStorage.getItem("carrito"));
+    if (guardado) {
+      this.lista = guardado;
     }
-    
-    else if(componente == "mother"){
-        const ashrock = {nombre: "Ashrock B450", precio: 85000};
-        const asus = {nombre: "Asus 520M", precio: 120000};
-        const gigabyte = {nombre: "Gigabyte H610", precio: 146000};
-        const msi = {nombre: "Msi B760", precio: 230000};
+    mostrarCarrito();
+  }
+};
+//Muestra en el html cada producto con nombre, precio y botón "Agregar". A cada botón le pone un event listener que 
+// llama a 
+// Carrito.agregar()
+function mostrarProductos() {
+  productos.forEach((prod) => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <strong>${prod.nombre}</strong> - $${prod.precio} 
+      <button id="add-${prod.id}">Agregar</button>
+    `;
+    contenedor.appendChild(div);
 
-        if (micro == "intel i3" || micro == "intel i5" || micro == "intel i7"){
-            let n = parseInt(prompt("Las motherboard en stock compatibles con tu procesador son: \n 1- Ashrock B450 \n 2- Asus 520M. \n Seleccione 1 o 2"));
-            while (n < 1 || n > 2){
-                n = parseInt(prompt("Numero invalido. Las motherboard en stock compatibles con tu procesador son: \n 1- Ashrock B450 \n 2- Asus 520M. \n Seleccione 1 o 2"));
-            }
-            if (n = 1){
-                return ashrock;
-            }
-            else if (n = 2){
-                return asus;
-            }
-        }
-        else if(micro == "ryzen 3" || micro == "ryzen 5" || micro == "ryzen 7"){
-            let n = parseInt(prompt("Las motherboard en stock compatibles con tu procesador son: \n 1- Gibabyte H610 \n 2- Msi B760. \n Seleccione 1 o 2"));
-            while (n < 1 || n > 2){
-                n = parseInt(prompt("Numero invalido. Las motherboard en stock compatibles con tu procesador son: \n 1- Gibabyte H610 \n 2- Msi B760. \n Seleccione 1 o 2"));
-            }
-            if (n = 1){
-                return gigabyte;
-            }
-            else if (n = 2){
-                return msi;
-            }
-        }
-
-    }
-    
-    else if(componente == "ram"){
-        const ocho = {nombre: "Memoria 8 GB", precio: 25000, cant: null};
-        const dieciseis = {nombre: "Memoria 16 GB", precio: 50000, cant: null};
-
-        let gigas = parseInt(prompt("Selecciona una opcion: \n 1- Memoria ram de 8gb o indica \n 2- Memoria ram de 16gb"));
-        while (gigas < 1 || gigas > 2){
-            gigas = parseInt(prompt("Numero incorrecto. Selecciona una opcion: \n 1- Memoria ram de 8gb o indica \n 2- Memoria ram de 16gb"));
-        }
-        let cant = parseInt(prompt("Ahora indica la cantidad de memorias que vas a querer"));    
-
-        if (gigas == 1){
-            ocho.cant = cant;
-            return ocho;
-        }
-        else if (gigas == 2){
-            dieciseis.cant = cant;
-            return dieciseis;
-        }
-    }
+    document.getElementById(`add-${prod.id}`).addEventListener("click", () => {
+      Carrito.agregar(prod);
+    });
+  });
+}
+//Muestra en el html el carrito con los productos, creando para cada uno un elemento li
+function mostrarCarrito() {
+  carritoLista.innerHTML = "";
+  Carrito.lista.forEach((prod, index) => {
+    const li = document.createElement("li");
+    li.textContent = `${prod.nombre} - $${prod.precio}`;
+    carritoLista.appendChild(li);
+  });
 }
 
-//Es un bucle en el que se pide una confirmacion para seguir haciendo presupuesto.
-//Utilizo los objetos para infomar los campos de tipo string, y operar con los campos de tipo numero. 
+//Boton de compra, con un evento click que hace una alerta y limpia el carrito
+btnComprar.addEventListener("click", () => {
+  alert("¡Compra realizada!");
+  Carrito.limpiar();
+});
+
 function app(){
-    alert("¡Arma tu PC en Hardware zone!");
-    alert("Presupuestamos microprocesador, motherboard y memoria ram");
-    let confirmacion = confirm("¿Empezamos?");
-    while(confirmacion){
-        let micro = elegir("cpu");
-        let placaBase = elegir("mother",micro.nombre);
-        let memoRam = elegir("ram");
-        alert(`Elegiste ,\n ${micro.nombre},\n ${placaBase.nombre}, \n ${memoRam.nombre}`);
-        let total = micro.precio + placaBase.precio + memoRam.precio * memoRam.cant;
-        alert(total);
-        confirmacion = confirm("¿Querés armar otra PC?");
-}
+    Carrito.cargar();
+    mostrarProductos();
 }
 
-//corro el programa
-app();
-
+//Ejecuto la aplicacion
+app()
