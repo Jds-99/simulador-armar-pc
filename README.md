@@ -1,2 +1,2 @@
 # Proyecto coder
-Simulador de armar un presupuesto para una PC.
+Simulador de tienda de hardware.
